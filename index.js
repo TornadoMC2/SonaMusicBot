@@ -136,19 +136,24 @@ const commands = {
             msg.channel.send(musicEmbed)
           } else if (m.content.startsWith(prefix + 'move')) {
             let args = m.content.split(" ").slice(1)
-            console.log(args)
-            if(!args[0] || isNaN(+args[0])) return msg.channel.send('Please specify the position of the song to move to the front')
+            if(!args[0] || isNaN(args[0])) return msg.channel.send('Please specify the position of the song to move to the front')
             var first = queue[msg.guild.id].songs[parseInt(args[0])-1];
-            console.log(first)
             if(first == undefined) return msg.channel.send('Please choose a song that is in the queue')
             queue[msg.guild.id].songs.sort(function(x,y){ return x == first ? -1 : y == first ? 1 : 0; });
             //console.log(queue[msg.guild.id].songs)
             msg.channel.send(`**:white_check_mark: Moved** \`${first.title}\`** to position 1**`)
+          } else if (m.content.startsWith(prefix + 'remove') || m.content.startsWith(prefix + 'delete')) {
+            let args = m.content.split(" ").slice(1)
+            if(!args[0] || isNaN(args[0])) return msg.channel.send("Please specify the position of the song to remove")
+            var remove = queue[msg.guild.id].songs[parseInt(args[0])-1];
+            if(first == undefined) return msg.channel.send("Please choose a song that is in the queue")
+            delete queue[msg.guild.id].songs[parseInt(args[0])-1]
+
+            msg.channel.send(`**:white_check_mark: Removed** \`${remove.title}}\`** from the queue**`)
           }
         });
         dispatcher.on('finish', () => {
           let next = queue[msg.guild.id].songs.shift()
-          console.log(next)
           play(next);
           collector.stop();
           //console.log(queue[msg.guild.id].songs.shift())
