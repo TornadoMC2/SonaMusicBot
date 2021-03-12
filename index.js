@@ -252,7 +252,7 @@ const commands = {
 
     } catch {
 
-      await search(args).then(async (res) => {
+      await ytsr(args).then(async (res) => {
 
         if (!queue.hasOwnProperty(message.guild.id)) queue[message.guild.id] = {}, queue[message.guild.id].playing = false, queue[message.guild.id].songs = [];
       
