@@ -71,7 +71,7 @@ const commands = {
             //if(msg.member.roles.cache.has(djrole.id) || msg.author.id == process.env.OWNERID) {
             if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
             msg.channel.send(':play_pause: Skipped!').then(() => {
-              dispatcher.destroy();
+              dispatcher.end();
               play(queue[msg.guild.id].songs.shift());
               collector.stop();
             });
