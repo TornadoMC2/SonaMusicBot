@@ -402,12 +402,12 @@ const commands = {
     if(msg.author.bot) return
 
     msg.member.voice.channel.leave();
-    
+
   }
 };
 
 client.on('ready', () => {
-	console.log('ready!'); queue
+	console.log('ready!');
   client.user.setActivity(`for ${prefix}help on ` + client.guilds.cache.size + " servers", {type: "WATCHING"})
 });
 
