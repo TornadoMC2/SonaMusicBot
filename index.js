@@ -47,7 +47,11 @@ const commands = {
         //msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
         msg.channel.send(musicEmbed)
         let connection = await msg.member.voice.channel.join();
-        let dispatcher = await connection.play(yt(song.url, { audioonly: true })).catch(e => console.log(e))
+        try {
+          let dispatcher = await connection.play(yt(song.url, { audioonly: true }))
+        } catch(e) {
+          console.log(e)
+        }
         let collector = msg.channel.createMessageCollector(m => m);
         collector.on('collect', m => {
           if (m.content.startsWith(prefix + 'pause')) {
