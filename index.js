@@ -146,7 +146,7 @@ const commands = {
             let args = m.content.split(" ").slice(1)
             if(!args[0] || isNaN(args[0])) return msg.channel.send("Please specify the position of the song to remove")
             var remove = queue[msg.guild.id].songs[parseInt(args[0])-1];
-            if(first == undefined) return msg.channel.send("Please choose a song that is in the queue")
+            if(remove == undefined) return msg.channel.send("Please choose a song that is in the queue")
             delete queue[msg.guild.id].songs[parseInt(args[0])-1]
 
             msg.channel.send(`**:white_check_mark: Removed** \`${remove.title}}\`** from the queue**`)
