@@ -17,67 +17,47 @@ let nowPlaying = {};
 const commands = {
 	'play': async (msg) => {
     if(msg.author.bot) return
-    //console.log(queue)
-		//if (queue[msg.guild.id] === undefined) return msg.channel.send(`Add some songs to the queue first with ${prefix}add`);
     if (!msg.member.voice.channel) return msg.channel.send(":x: **You have to be in a voice channel to use this command.**")
-    if (queue[msg.guild.id] == null || queue[msg.guild.id] == undefined) return msg.channel.send("Please add a song using s>>add")
+    if (queue[msg.guild.id] == null || queue[msg.guild.id] == undefined) return msg.channel.send(`Please add a song using ${prefix}add`)
     
       if (!msg.guild.voice) return commands.join(msg).then(() => commands.play(msg));
       if (queue[msg.guild.id].playing) return msg.channel.send('Already Playing, Please use pause or resume commands to pause or resume the music');
       let dispatcher;
       queue[msg.guild.id].playing = true;
 
-      //console.log(queue);
       (async function play(song) {
-        //console.log(song);
         let queueEmpty = new Discord.MessageEmbed()
         .setColor('RED')
+        .setDescription(`The song queue is now empty!\n\nAdd some songs with \`${prefix}add\``)
         
-        if (song === undefined) return msg.channel.send('Queue is empty').then(() => {
+        if (song === undefined) return msg.channel.send(queueEmpty).then(() => {
           queue[msg.guild.id].playing = false;
           nowPlaying = {};
           msg.member.voice.channel.leave();
         });
         nowPlaying = {"url": song.url, "title": song.title, "requester": song.requester}
         let musicEmbed = new Discord.MessageEmbed()
-        .setTitle("🎶 Now Playing:")
-        .setColor("BLUE")
-        .addField("Name:", `${song.title}`)
-        .addField("Requsted by:", song.requester)
-        //msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
+        .setAuthor("Now Playing", client.user.avatarURL, "https://discord.gg/3EyJ9JH")
+        .setDescription(`[${song.title}](${song.url})\n\n\`Requested by:\` ${song.requester}`)
+        .setTuhmbanil(song.thumbnail)
+        .setColor("RANDOM")
         msg.channel.send(musicEmbed)
         let connection = await msg.member.voice.channel.join();
         let dispatcher = await connection.play(yt(song.url, { audioonly: true }))
         let collector = msg.channel.createMessageCollector(m => m);
         collector.on('collect', m => {
           if (m.content.startsWith(prefix + 'pause')) {
-            //let djrole = msg.guild.roles.cache.find(r => r.name === "dj");
-            //if(msg.member.roles.cache.has(djrole.id) || msg.author.id == process.env.OWNERID) {
             if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
             msg.channel.send(':pause_button: Paused').then(() => {dispatcher.pause();});
-            //} else {
-            // msg.channel.send("You need the ``dj`` role or ``bot owner`` permission to do that!") 
-            //}
           } else if (m.content.startsWith(prefix + 'resume')){
-            //let djrole = msg.guild.roles.cache.find(r => r.name === "dj");
-            //if(msg.member.roles.cache.has(djrole.id) || msg.author.id == process.env.OWNERID) {
             if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
             msg.channel.send(':arrow_forward: Resumed!').then(() => {dispatcher.resume();});
-            //} else {
-             //msg.channel.send("You need the ``dj`` role or ``bot owner`` permission to do that!") 
-            //}
           } else if (m.content.startsWith(prefix + 'skip') || m.content.startsWith(prefix + 'next')){
-            //let djrole = msg.guild.roles.cache.find(r => r.name === "dj");
-            //if(msg.member.roles.cache.has(djrole.id) || msg.author.id == process.env.OWNERID) {
             if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
             msg.channel.send(':play_pause: Skipped!').then(() => {
               dispatcher.end();
-              //play(queue[msg.guild.id].songs.shift());
               collector.stop();
             });
-            //} else {
-             //msg.channel.sen("You need the ``dj`` role or ``bot owner`` permission to do that!")
-            //}
           } else if (m.content.startsWith(prefix + 'volume+')){
             if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
             dispatcher.setVolume(Math.min((dispatcher.volume*50 + (2*(m.content.split('+').length-1)))/50,2));
@@ -98,7 +78,6 @@ const commands = {
               dispatcher.setVolume(Math.min(setVolumeTo));
               msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
             }
-            //dispatcher.setVolume(Math.min((dispatcher.volume*50 + 2*(setVolumeTo)/50)));
           } else if (m.content.startsWith(prefix + 'volume')) {
             msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
           } else if (m.content.startsWith(prefix + 'time')){
@@ -126,13 +105,11 @@ const commands = {
             let seconds = totalSeconds % 60;
             seconds = String(seconds).padStart(2, "0");
             
-           //msg.channel.send(`Playing: **${song.title}** as requested by: **${song.requester}**`) 
             let musicEmbed = new Discord.MessageEmbed()
-            //.setTitle("🎶 Now Playing:")
             .setAuthor(`Now Playing`, '', 'https://discord.gg/3EyJ9JH')
             .setDescription(`[${song.title}](${song.url})\n\n\`${bar}\`\n\n\`${(hours > 0 ? `${hours}:` : ``)}${minutes}:${seconds} / ${song.timestamp}\`\n\n\`Requested by:\` ${song.requester}`)
             .setColor("#7734eb")
-            //msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
+            .setThumbnail(song.thumbnail)
             msg.channel.send(musicEmbed)
           } else if (m.content.startsWith(prefix + 'move')) {
             let args = m.content.split(" ").slice(1)
@@ -140,7 +117,6 @@ const commands = {
             var first = queue[msg.guild.id].songs[parseInt(args[0])-1];
             if(first == undefined) return msg.channel.send('Please choose a song that is in the queue')
             queue[msg.guild.id].songs.sort(function(x,y){ return x == first ? -1 : y == first ? 1 : 0; });
-            //console.log(queue[msg.guild.id].songs)
             msg.channel.send(`**:white_check_mark: Moved** \`${first.title}\`** to position 1**`)
           } else if (m.content.startsWith(prefix + 'remove') || m.content.startsWith(prefix + 'delete')) {
             let args = m.content.split(" ").slice(1)
@@ -156,7 +132,6 @@ const commands = {
           let next = queue[msg.guild.id].songs.shift()
           play(next);
           collector.stop();
-          //console.log(queue[msg.guild.id].songs.shift())
         });
         dispatcher.on('error', (err) => {
           return msg.channel.send('error: ' + err).then(() => {
@@ -207,7 +182,6 @@ const commands = {
     
     await search(args.join(" "), (err, res) => {
      if(err) return message.channel.send("Invalid: " + err)
-     // message.channel.send(" **Searching :mag_right:** ``" + message.content.slice(prefix.length).split(" ").slice(1).join(" ") + "``")
       if (!queue.hasOwnProperty(message.guild.id)) queue[message.guild.id] = {}, queue[message.guild.id].playing = false, queue[message.guild.id].songs = [];
       
       let videos = res.videos.slice(0, 10)
@@ -222,8 +196,6 @@ const commands = {
       let embed = new Discord.MessageEmbed()
         .setColor("GREEN")
         .addField(`**${searching} Searching for song/video**` + "``" + message.content.slice(prefix.length).split(" ").slice(1).join(" ") + "``", resp += `\n**Chose a number between** \`1-${videos.length}\` \n \n Type \`cancel\` to cancel the command`)
-        
-      //resp += `\n**Chose a number between** \`1-${videos.length}\``
       
       message.channel.send(embed)
       
@@ -235,20 +207,15 @@ const commands = {
       
       collector.once("collect", function(m) {
         if(m.content == "cancel") return message.channel.send("Command Canceled")
-        //console.log(this.videos[parseInt(m.content)-1])
-        queue[message.guild.id].songs.push({url: this.videos[parseInt(m.content)-1].url, title: this.videos[parseInt(m.content)-1].title, requester: message.author.username, timestamp: this.videos[parseInt(m.content)-1].timestamp, seconds: this.videos[parseInt(m.content)-1].seconds})
+        queue[message.guild.id].songs.push({url: this.videos[parseInt(m.content)-1].url, title: this.videos[parseInt(m.content)-1].title, requester: message.author.username, timestamp: this.videos[parseInt(m.content)-1].timestamp, seconds: this.videos[parseInt(m.content)-1].seconds, thumbnail: this.videos[parseInt(m.content)-1].thumbnail})
         let musicEmbed = new Discord.MessageEmbed()
         .setAuthor(`Added to queue`, message.author.avatarURL(), 'https://discord.gg/3EyJ9JH')
         .setTitle(`${this.videos[parseInt(m.content)-1].title}`)
         .setURL(this.videos[parseInt(m.content)-1].url)
         .setThumbnail(this.videos[parseInt(m.content)-1].thumbnail)
-        //.setColor("BLUE")
-        //.addField("Name:", `${this.videos[parseInt(m.content)-1].title}`)
-        //.addField("Requsted by:", message.author.tag)
         .addField("Channel", this.videos[parseInt(m.content)-1].author.name)
         .addField("Song Duration", this.videos[parseInt(m.content)-1].timestamp)
 			  .addField("Position in queue", queue[message.guild.id].songs.length)
-      //msg.channel.sendMessage(`Playing: **${song.title}** as requested by: **${song.requester}**`);
       message.channel.send(musicEmbed)
       })
       
