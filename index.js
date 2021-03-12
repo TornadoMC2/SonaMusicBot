@@ -252,7 +252,7 @@ const commands = {
 
     } catch {
 
-      await search(url).then(async (res) => {
+      await search(url, async (res) => {
 
         if (!queue.hasOwnProperty(message.guild.id)) queue[message.guild.id] = {}, queue[message.guild.id].playing = false, queue[message.guild.id].songs = [];
       
