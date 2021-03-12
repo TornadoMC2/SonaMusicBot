@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const yt = require('ytdl-core');
 //const tokens = require('./tokens.json');
 const client = new Discord.Client();
-const prefix = "s>>"
+const prefix = "s<"
 
 function clean(text) {
   if (typeof(text) === "string")
