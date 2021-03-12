@@ -57,7 +57,7 @@ const commands = {
           if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
           msg.channel.send(':pause_button: Paused').then(() => {dispatcher.pause();});
 
-        } else if (m.content.startsWith(prefix + 'resume')){
+        } else if (m.content.startsWith(prefix + 'resume')) {
 
           if(msg.member.voice.channel !== msg.guild.voice.connection.channel) return msg.channel.send(":x: **You have to be in the same channel as Aria to use this command.**")
           msg.channel.send(':arrow_forward: Resumed!').then(() => {dispatcher.resume();});
@@ -71,9 +71,9 @@ const commands = {
             collector.stop();
           });
 
-        } else if (m.content.startsWith(prefix + 'volume+')){
+        } else if (m.content.startsWith(prefix + 'volume+')) {
 
-          return msg.channel.send("Currently being worked on")
+          //return msg.channel.send("Currently being worked on")
 
           if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
 
@@ -82,7 +82,7 @@ const commands = {
             
         } else if (m.content.startsWith(prefix + 'volume-')){
 
-          return msg.channel.send("Currently being worked on")
+          //return msg.channel.send("Currently being worked on")
 
           if (Math.round(dispatcher.volume*50) <= 0) return msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
           
@@ -91,7 +91,7 @@ const commands = {
 
         } else if (m.content.startsWith(prefix + 'volume')) {
 
-          return msg.channel.send("Currently being worked on")
+          //return msg.channel.send("Currently being worked on")
 
           let setVolumeTo = parseInt(m.content.split(' ').join(" "))*50
 
