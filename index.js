@@ -147,9 +147,9 @@ const commands = {
             if(!args[0] || isNaN(args[0])) return msg.channel.send("Please specify the position of the song to remove")
             var remove = queue[msg.guild.id].songs[parseInt(args[0])-1];
             if(remove == undefined) return msg.channel.send("Please choose a song that is in the queue")
-            delete queue[msg.guild.id].songs[parseInt(args[0])-1]
+            queue[msg.guild.id].songs.splice(parseInt(args[0])-1, 1)
 
-            msg.channel.send(`**:white_check_mark: Removed** \`${remove.title}}\`** from the queue**`)
+            msg.channel.send(`**:white_check_mark: Removed** \`${remove.title}\`** from the queue**`)
           }
         });
         dispatcher.on('finish', () => {
