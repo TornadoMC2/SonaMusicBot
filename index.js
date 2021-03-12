@@ -39,7 +39,7 @@ const commands = {
         let musicEmbed = new Discord.MessageEmbed()
         .setAuthor("Now Playing", client.user.avatarURL, "https://discord.gg/3EyJ9JH")
         .setDescription(`[${song.title}](${song.url})\n\n\`Requested by:\` ${song.requester}`)
-        .setTuhmbanil(song.thumbnail)
+        .setThumbanil(song.thumbnail)
         .setColor("RANDOM")
         msg.channel.send(musicEmbed)
         let connection = await msg.member.voice.channel.join();
