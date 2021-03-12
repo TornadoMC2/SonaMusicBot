@@ -76,7 +76,7 @@ const commands = {
               collector.stop();
             });
             //} else {
-             //msg.channel.send("You need the ``dj`` role or ``bot owner`` permission to do that!")
+             //msg.channel.sen("You need the ``dj`` role or ``bot owner`` permission to do that!")
             //}
           } else if (m.content.startsWith(prefix + 'volume+')){
             if (Math.round(dispatcher.volume*50) >= 100) return msg.channel.send(`Volume: ${Math.round(dispatcher.volume*50)}%`);
