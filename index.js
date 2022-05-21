@@ -16,7 +16,7 @@ let nowPlaying = {};
 
 const commands = {
   'play': async (msg) => {
-    if(msg.author.bot) return
+    if (msg.author.bot) return
     if (!msg.member.voice.channel) return msg.channel.send(":x: **You have to be in a voice channel to use this command.**")
     if (queue[msg.guild.id] == null || queue[msg.guild.id] == undefined) return msg.channel.send(`Please add a song using ${prefix}add`)
     if (!msg.guild.voice) return commands.join(msg).then(() => commands.play(msg));
